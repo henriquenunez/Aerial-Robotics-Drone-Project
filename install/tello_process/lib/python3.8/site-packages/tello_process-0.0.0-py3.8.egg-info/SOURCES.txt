@@ -10,6 +10,7 @@ setup.py
 ../../build/tello_process/tello_process.egg-info/zip-safe
 resource/tello_process
 tello_process/__init__.py
+tello_process/controller.py
 tello_process/receiver.py
 test/test_copyright.py
 test/test_flake8.py

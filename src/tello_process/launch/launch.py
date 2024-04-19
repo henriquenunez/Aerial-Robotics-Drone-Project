@@ -10,7 +10,7 @@ from launch.actions import ExecuteProcess
 
 def generate_launch_description():
     ns = 'drone1'
-    world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'simple.world')
+    world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'demo_track.world')
     urdf_path = os.path.join(get_package_share_directory('tello_description'), 'urdf', 'tello_1.urdf')
 
 
@@ -39,14 +39,14 @@ def generate_launch_description():
         Node(package='tello_process', executable='receiver', output='screen'),
         
         # Joystick driver, generates /namespace/joy messages
-     #    Node(package='joy', executable='joy_node', output='screen', namespace=ns),
+        Node(package='joy', executable='joy_node', output='screen', namespace=ns),
 
         # Joystick controller, generates /namespace/cmd_vel messages
-        # Node(package='tello_driver', executable='tello_joy_main', output='screen', namespace=ns),
+        Node(package='tello_driver', executable='tello_joy_main', output='screen', namespace=ns),
 
      #    Node(package='rviz2', executable='rviz2', namespace=ns, output='screen'),
 
-     #    Node(package='example_cpp_pkg', executable='tracker', output='screen', namespace=ns) # arguments=['image:=/drone1/image_raw']
+     #    Node(package='example_cpp_pkg', executable='tracker', outputTelloSubscrbver='screen', namespace=ns) # arguments=['image:=/drone1/image_raw']
 
         # Node(package='image_view', executable='image_view', output='screen', namespace=ns, arguments=['image:=/drone1/image_raw'])
     ])

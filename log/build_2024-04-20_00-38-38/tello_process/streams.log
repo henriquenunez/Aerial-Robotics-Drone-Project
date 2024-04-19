@@ -1,0 +1,21 @@
+[0.891s] Invoking command in '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/tello_process': PYTHONPATH=/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/prefix_override:/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/tello_process/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/tello_process build --build-base /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/build install --record /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/install.log --single-version-externally-managed install_data
+[1.141s] running egg_info
+[1.141s] writing ../../build/tello_process/tello_process.egg-info/PKG-INFO
+[1.142s] writing dependency_links to ../../build/tello_process/tello_process.egg-info/dependency_links.txt
+[1.142s] writing entry points to ../../build/tello_process/tello_process.egg-info/entry_points.txt
+[1.142s] writing requirements to ../../build/tello_process/tello_process.egg-info/requires.txt
+[1.142s] writing top-level names to ../../build/tello_process/tello_process.egg-info/top_level.txt
+[1.183s] reading manifest file '../../build/tello_process/tello_process.egg-info/SOURCES.txt'
+[1.184s] writing manifest file '../../build/tello_process/tello_process.egg-info/SOURCES.txt'
+[1.184s] running build
+[1.184s] running build_py
+[1.184s] running install
+[1.185s] running install_lib
+[1.187s] running install_data
+[1.187s] running install_egg_info
+[1.188s] removing '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/tello_process/lib/python3.8/site-packages/tello_process-0.0.0-py3.8.egg-info' (and everything under it)
+[1.189s] Copying ../../build/tello_process/tello_process.egg-info to /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/tello_process/lib/python3.8/site-packages/tello_process-0.0.0-py3.8.egg-info
+[1.190s] running install_scripts
+[1.207s] Installing receiver script to /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/tello_process/lib/tello_process
+[1.207s] writing list of installed files to '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/install.log'
+[1.227s] Invoked command in '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/tello_process' returned '0': PYTHONPATH=/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/prefix_override:/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/tello_process/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/tello_process build --build-base /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/build install --record /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/tello_process/install.log --single-version-externally-managed install_data

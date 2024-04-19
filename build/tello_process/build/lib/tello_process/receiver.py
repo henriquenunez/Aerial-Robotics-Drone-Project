@@ -5,7 +5,7 @@ from cv_bridge import CvBridge
 import cv2
 
 
-class TelloSubscrbver(Node):
+class TelloSubscriber(Node):
 
     def __init__(self):
         super().__init__('tello_image_reciever')
@@ -30,8 +30,7 @@ class TelloSubscrbver(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    # minimal_publisher = MinimalPublisher()
-    tello_sub = TelloSubscrbver()
+    tello_sub = TelloSubscriber()
 
     rclpy.spin(tello_sub)
     tello_sub.destroy_node()
