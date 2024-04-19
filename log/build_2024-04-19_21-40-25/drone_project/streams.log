@@ -1,0 +1,37 @@
+[0.965s] Invoking command in '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/drone_project': PYTHONPATH=/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/prefix_override:/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/drone_project build --build-base /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build install --record /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/install.log --single-version-externally-managed install_data
+[1.308s] running egg_info
+[1.308s] creating ../../build/drone_project/drone_project.egg-info
+[1.309s] writing ../../build/drone_project/drone_project.egg-info/PKG-INFO
+[1.309s] writing dependency_links to ../../build/drone_project/drone_project.egg-info/dependency_links.txt
+[1.309s] writing entry points to ../../build/drone_project/drone_project.egg-info/entry_points.txt
+[1.309s] writing requirements to ../../build/drone_project/drone_project.egg-info/requires.txt
+[1.310s] writing top-level names to ../../build/drone_project/drone_project.egg-info/top_level.txt
+[1.310s] writing manifest file '../../build/drone_project/drone_project.egg-info/SOURCES.txt'
+[1.355s] reading manifest file '../../build/drone_project/drone_project.egg-info/SOURCES.txt'
+[1.356s] writing manifest file '../../build/drone_project/drone_project.egg-info/SOURCES.txt'
+[1.357s] running build
+[1.357s] running build_py
+[1.357s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build
+[1.358s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib
+[1.358s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib/drone_project
+[1.358s] copying drone_project/drone_controller.py -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib/drone_project
+[1.358s] copying drone_project/__init__.py -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib/drone_project
+[1.358s] running install
+[1.360s] running install_lib
+[1.362s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project
+[1.362s] copying /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib/drone_project/drone_controller.py -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project
+[1.362s] copying /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build/lib/drone_project/__init__.py -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project
+[1.362s] byte-compiling /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project/drone_controller.py to drone_controller.cpython-38.pyc
+[1.362s] byte-compiling /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project/__init__.py to __init__.cpython-38.pyc
+[1.362s] running install_data
+[1.363s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/share/ament_index
+[1.363s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/share/ament_index/resource_index
+[1.363s] creating /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/share/ament_index/resource_index/packages
+[1.363s] copying resource/drone_project -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/share/ament_index/resource_index/packages
+[1.363s] copying package.xml -> /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/share/drone_project
+[1.363s] running install_egg_info
+[1.365s] Copying ../../build/drone_project/drone_project.egg-info to /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages/drone_project-0.0.0-py3.8.egg-info
+[1.365s] running install_scripts
+[1.388s] Installing drone_controller script to /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/drone_project
+[1.388s] writing list of installed files to '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/install.log'
+[1.416s] Invoked command in '/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/drone_project' returned '0': PYTHONPATH=/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/prefix_override:/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/drone_project/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/drone_project build --build-base /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/build install --record /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/drone_project/install.log --single-version-externally-managed install_data

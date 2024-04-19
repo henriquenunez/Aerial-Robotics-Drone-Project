@@ -1,0 +1,8 @@
+{
+  "package_name": "tello_msgs",
+  "non_idl_tuples": [
+    "/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/tello_ros/tello_msgs:msg/FlightData.msg",
+    "/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/tello_ros/tello_msgs:msg/TelloResponse.msg",
+    "/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/tello_ros/tello_msgs:srv/TelloAction.srv"
+  ]
+}

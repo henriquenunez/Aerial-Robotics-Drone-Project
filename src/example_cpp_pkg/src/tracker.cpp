@@ -7,7 +7,9 @@ using namespace std::placeholders;
 Tracker::Tracker() : Node("tracker"), _is_tracker_initialized(false)
 {
   // Subscribers
-  _img_sub = create_subscription<sensor_msgs::msg::Image>("/drone1/image_raw", rclcpp::SensorDataQoS(), bind(&Tracker::_imageCallback, this, _1));
+  _img_sub = create_subscription<sensor_msgs::msg::Image>("/drone1/image_raw", 
+    rclcpp::SensorDataQoS(),
+    bind(&Tracker::_imageCallback, this, _1));
 
   // Publishers
   _visualization_pub = create_publisher<sensor_msgs::msg::Image>("/visualization", rclcpp::SensorDataQoS());

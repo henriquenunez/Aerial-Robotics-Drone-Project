@@ -1,0 +1,53 @@
+-- Found cv_bridge: 3.1.3 (/opt/ros/galactic/share/cv_bridge/cmake)
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Using single rosidl_typesupport_c: rosidl_typesupport_introspection_c
+-- Found rosidl_adapter: 2.2.3 (/opt/ros/galactic/share/rosidl_adapter/cmake)
+-- Using single rosidl_typesupport_cpp: rosidl_typesupport_introspection_cpp
+-- Found rclcpp: 9.2.2 (/opt/ros/galactic/share/rclcpp/cmake)
+-- Found rmw_implementation_cmake: 3.3.1 (/opt/ros/galactic/share/rmw_implementation_cmake/cmake)
+-- Found rmw_cyclonedds_cpp: 0.22.6 (/opt/ros/galactic/share/rmw_cyclonedds_cpp/cmake)
+-- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+-- Found std_srvs: 2.2.4 (/opt/ros/galactic/share/std_srvs/cmake)
+-- Found tello_msgs: 0.1.0 (/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/example_cpp_pkg/../../install/tello_msgs/share/tello_msgs/cmake)
+-- Found ament_lint_auto: 0.10.7 (/opt/ros/galactic/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/src/example_cpp_pkg/include
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'cpplint' to check C / C++ code against the Google style
+-- Configured cpplint exclude dirs and/or files: 
+-- Added test 'flake8' to check Python code syntax and style conventions
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/example_cpp_pkg
+[35m[1mScanning dependencies of target tracker[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/tracker.dir/src/tracker.cpp.o[0m
+[100%] [32m[1mLinking CXX executable tracker[0m
+[100%] Built target tracker
+-- Install configuration: ""
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/lib/example_cpp_pkg/tracker
+-- Set runtime path of "/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/lib/example_cpp_pkg/tracker" to ""
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/launch
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/launch/__pycache__
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/launch/__pycache__/demo_track_launch.cpython-38.pyc
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/launch/demo_track_launch.py
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/ament_index/resource_index/package_run_dependencies/example_cpp_pkg
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/ament_index/resource_index/parent_prefix_path/example_cpp_pkg
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/environment/ament_prefix_path.sh
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/environment/path.sh
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/environment/path.dsv
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/local_setup.bash
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/local_setup.sh
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/local_setup.zsh
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/local_setup.dsv
+-- Installing: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/package.dsv
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/ament_index/resource_index/packages/example_cpp_pkg
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/cmake/example_cpp_pkgConfig.cmake
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/cmake/example_cpp_pkgConfig-version.cmake
+-- Up-to-date: /home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/install/example_cpp_pkg/share/example_cpp_pkg/package.xml
