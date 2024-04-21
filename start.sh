@@ -1,6 +1,12 @@
 #!/bin/bash
 
-docker build -t ros_container .
+if [[ "$1" = "build" ]]; then
+  docker build -t ros_container .
+fi
+
+if [[ "$1" = "build-no-cache" ]]; then
+  docker build --no-cache -t ros_container .
+fi
 
 xhost +
 
@@ -10,5 +16,5 @@ docker run -it \
   --device=/dev/dri:/dev/dri \
   --env="DISPLAY=$DISPLAY" \
   ros_container \
-  bash drone_racing_ws/src/drone_project/run_everything.sh
+  bash #drone_racing_ws/src/drone_project/run_everything.sh
 

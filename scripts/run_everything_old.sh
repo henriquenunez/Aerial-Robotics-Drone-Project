@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd ~/drone_racing_ws/
+cd ~
+cd drone_racing_ros2_ws/
 
 # Source ROS2
 source /opt/ros/galactic/setup.bash
@@ -15,7 +16,7 @@ source /usr/share/gazebo/setup.sh
 
 # ros2 launch tello_gazebo demo_track_launch.py
 
-ros2 launch src/tello_process/launch/launch.py 
+ros2 launch src/drone_project/launch/demo_track_launch.py 
 
 
 # ros2 launch drone_project/launch/demo_track_l aunch.py 

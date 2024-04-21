@@ -16,8 +16,10 @@ USER rosusr
 
 WORKDIR /home/rosusr
 COPY scripts/prepare_workspace.sh . 
-COPY src/drone_project ./drone_racing_ws/src/drone_project
-COPY src/example_cpp_pkg ./drone_racing_ws/src/example_cpp_pkg
+COPY scripts/run_everything.sh . 
+#COPY src/drone_project ./drone_racing_ws/src/drone_project
+#COPY src/example_cpp_pkg ./drone_racing_ws/src/example_cpp_pkg
+COPY src/tello_process ./drone_racing_ws/src/tello_process
 
 USER root
 WORKDIR /home/rosusr/drone_racing_ws
@@ -26,5 +28,5 @@ RUN chmod 777 -R .
 USER rosusr
 WORKDIR /home/rosusr
 RUN ./prepare_workspace.sh
-RUN ./drone_racing_ws/src/example_cpp_pkg/build.sh
+#RUN ./drone_racing_ws/src/example_cpp_pkg/build.sh
 

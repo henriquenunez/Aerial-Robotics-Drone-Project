@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'receiver = tello_process.receiver:main',
+            'controller= tello_process.controller:main',
         ],
     },
 )
