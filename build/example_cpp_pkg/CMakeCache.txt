@@ -467,7 +467,7 @@ std_msgs_DIR:PATH=/opt/ros/galactic/share/std_msgs/cmake
 std_srvs_DIR:PATH=/opt/ros/galactic/share/std_srvs/cmake
 
 //The directory containing a CMake configuration file for tello_msgs.
-tello_msgs_DIR:PATH=/home/danial/drone_racing_ros2_ws/install/tello_msgs/share/tello_msgs/cmake
+tello_msgs_DIR:PATH=tello_msgs_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for tracetools.
 tracetools_DIR:PATH=/opt/ros/galactic/share/tracetools/cmake

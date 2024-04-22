@@ -1,3 +1,4 @@
 [console_scripts]
+controller = tello_process.controller:main
 receiver = tello_process.receiver:main
 
