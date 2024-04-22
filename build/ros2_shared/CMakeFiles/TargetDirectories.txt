@@ -1,9 +1,0 @@
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/install/strip.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/install/local.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/install.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/list_install_components.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/rebuild_cache.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/edit_cache.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/test.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/ros2_shared_uninstall.dir
-/home/danial/drone_racing_ros2_ws/src/Aerial-Robotics-Drone-Project/build/ros2_shared/CMakeFiles/uninstall.dir
