@@ -13,7 +13,6 @@ def generate_launch_description():
     world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'demo_track.world')
     urdf_path = os.path.join(get_package_share_directory('tello_description'), 'urdf', 'tello_1.urdf')
 
-
     package_name = "tello_gazebo"  
     package_address = get_package_share_directory(package_name)
 
@@ -30,7 +29,7 @@ def generate_launch_description():
          ], output='screen'),
 
         # Spawn tello.urdf
-        Node(package='tello_gazebo', executable='inject_entity.py', output='screen', arguments=[urdf_path, '0', '0', '1', '1.57079632679']),
+        Node(package='tello_gazebo', executable='inject_entity.py', output='screen', arguments=[urdf_path, '0', '-3', '1', '1.57079632679']),
 
         # Publish static transforms
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen', arguments=[urdf_path]),

@@ -47,7 +47,14 @@ class TelloSubscriber(Node):
             if child_idx == -1:
                 inner_contours.append(contour)
                 cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
-        for contour in inner_contours:
+
+        areas = [cv2.contourArea(cnt) for cnt in inner_contours]
+        larger_inner_contour = contours[np.argmax(areas)]
+        image = cv2.drawContours(image,[larger_inner_contour],
+                                                  -1, (0, 0, 255), 2)
+
+
+        for i, contour in enumerate(inner_contours):
             epsilon = 0.02 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
 
@@ -62,15 +69,20 @@ class TelloSubscriber(Node):
 
             avg_x = sum(x_coords) / len(x_coords)
             avg_y = sum(y_coords) / len(y_coords)
-            self.final_average_point = (int(avg_x), int(avg_y))
-            cv2.circle(image, self.final_average_point, 5, (255, 150, 255), -1)
+            average_point = (int(avg_x), int(avg_y))
+            if i == np.argmax(areas):
+                self.final_average_point = (int(avg_x), int(avg_y))
+                cv2.circle(image, average_point, 5, (255, 0, 0), -1)
+            else:
+                cv2.circle(image, average_point, 5, (0, 0, 255), -1)
+                
 
 
         cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
-        cv2.imshow("Tello Image", image)
         cv2.imshow("res", mask)
+        cv2.imshow("Tello Image", image)
         cv2.waitKey(1)
-        
+
         if self.final_average_point:
             array = Float32MultiArray(data=[self.final_average_point[0],
                                          self.final_average_point[1]])
