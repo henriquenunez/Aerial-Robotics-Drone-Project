@@ -13,6 +13,8 @@ class TelloSubscriber(Node):
 
     def __init__(self):
         super().__init__('tello_image_reciever')
+        self.final_average_point = []
+
         self.subscription = self.create_subscription(
             Image,
             '/drone1/image_raw',
@@ -38,7 +40,6 @@ class TelloSubscriber(Node):
                                                 cv2.RETR_TREE,
                                                   cv2.CHAIN_APPROX_SIMPLE)
         
-
         inner_contours = []
         for i, contour in enumerate(contours):
             _, _, child_idx, parent_idx = hierarchy[0][i]
@@ -46,7 +47,6 @@ class TelloSubscriber(Node):
             if child_idx == -1:
                 inner_contours.append(contour)
                 cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
-        global final_average_point
         for contour in inner_contours:
             epsilon = 0.02 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
@@ -57,24 +57,24 @@ class TelloSubscriber(Node):
                 sq_points.append([x, y])
                 cv2.circle(image, (x, y), 5, (0, 0, 255), -1)
 
-
             x_coords = [point[0] for point in sq_points]
             y_coords = [point[1] for point in sq_points]
 
             avg_x = sum(x_coords) / len(x_coords)
             avg_y = sum(y_coords) / len(y_coords)
-            final_average_point = (int(avg_x), int(avg_y))
-            cv2.circle(image, final_average_point, 5, (255, 150, 255), -1)
+            self.final_average_point = (int(avg_x), int(avg_y))
+            cv2.circle(image, self.final_average_point, 5, (255, 150, 255), -1)
 
 
         cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
         cv2.imshow("Tello Image", image)
         cv2.imshow("res", mask)
         cv2.waitKey(1)
-
-        array = Float32MultiArray(data=[final_average_point[0],
-                                         final_average_point[1]])
-        self.frame_coord_pub.publish(array)
+        
+        if self.final_average_point:
+            array = Float32MultiArray(data=[self.final_average_point[0],
+                                         self.final_average_point[1]])
+            self.frame_coord_pub.publish(array)
 
 def main(args=None):
     rclpy.init(args=args)
