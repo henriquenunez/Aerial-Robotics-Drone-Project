@@ -4,6 +4,10 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from std_msgs.msg import Float32MultiArray
 import cv2
+import numpy as np
+
+LOWER_GREEN = np.array([40, 40, 40])
+UPPER_GREEN = np.array([70, 255, 255])
 
 class TelloSubscriber(Node):
 
@@ -19,17 +23,58 @@ class TelloSubscriber(Node):
         self.get_logger().info("Image subscriber node initialized")
 
     def image_callback(self, msg):
-        #self.get_logger().info("Received an image")
+
+        # self.get_logger().info("Received an image")
         cv_image = CvBridge().imgmsg_to_cv2(msg, "bgr8")
-        cv2.imshow("Tello Image", cv_image)
-        cv2.waitKey(1)
         self.process_frame(cv_image)
 
     def process_frame(self, image):
-        # TODO: find the center coordinates for the frontmost frame
-        array = Float32MultiArray(data=[20.0, 20.0, 320.0, 20.0])
+
+        image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, LOWER_GREEN, UPPER_GREEN)
+
+        contours, hierarchy = cv2.findContours(mask,
+                                                cv2.RETR_TREE,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        
+
+        inner_contours = []
+        for i, contour in enumerate(contours):
+            _, _, child_idx, parent_idx = hierarchy[0][i]
+            
+            if child_idx == -1:
+                inner_contours.append(contour)
+                cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
+        global final_average_point
+        for contour in inner_contours:
+            epsilon = 0.02 * cv2.arcLength(contour, True)
+            approx = cv2.approxPolyDP(contour, epsilon, True)
+
+            sq_points = []
+            for point in approx:
+                x, y = point.ravel()
+                sq_points.append([x, y])
+                cv2.circle(image, (x, y), 5, (0, 0, 255), -1)
+
+
+            x_coords = [point[0] for point in sq_points]
+            y_coords = [point[1] for point in sq_points]
+
+            avg_x = sum(x_coords) / len(x_coords)
+            avg_y = sum(y_coords) / len(y_coords)
+            final_average_point = (int(avg_x), int(avg_y))
+            cv2.circle(image, final_average_point, 5, (255, 150, 255), -1)
+
+
+        cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
+        cv2.imshow("Tello Image", image)
+        cv2.imshow("res", mask)
+        cv2.waitKey(1)
+
+        array = Float32MultiArray(data=[final_average_point[0],
+                                         final_average_point[1]])
         self.frame_coord_pub.publish(array)
-        #self.get_logger().info("Processed frame")
 
 def main(args=None):
     rclpy.init(args=args)
