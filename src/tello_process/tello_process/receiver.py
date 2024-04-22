@@ -28,6 +28,7 @@ class TelloSubscriber(Node):
             self.image_callback,
             rclpy.qos.qos_profile_sensor_data
         )
+        self.kernel = np.ones((5, 5), np.uint8)
 
         #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
         # cv2.namedWindow('Threshold Adjustments')
@@ -76,60 +77,90 @@ class TelloSubscriber(Node):
         cv_image = CvBridge().imgmsg_to_cv2(msg, "bgr8")
         self.process_frame(cv_image)
 
-    def process_frame(self, image):
+    def get_biggest_inner_contour(self, contours, hierarchy, image):
 
-        image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
-        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
+        inner_contours = []
+        for i, contour in enumerate(contours):
+            _, _, child_idx, parent_idx = hierarchy[0][i]
+            
+            if child_idx == -1:
+                inner_contours.append(contour)
+                cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
 
-        mask_brown = cv2.inRange(hsv, LOWER_BROWN, UPPER_BROWN)
-        mask_green = cv2.inRange(hsv, LOWER_GREEN, UPPER_GREEN)
-        mask_red = cv2.inRange(hsv, LOWER_RED, UPPER_RED)
-
-        mask_combined = cv2.bitwise_or(mask_brown, mask_green)
-        mask = cv2.bitwise_or(mask_combined, mask_red)
-
-        contours, hierarchy = cv2.findContours(mask,
-                                                cv2.RETR_TREE,
-                                                  cv2.CHAIN_APPROX_SIMPLE)
-        if len(contours) > 0:
-            inner_contours = []
-            for i, contour in enumerate(contours):
-                _, _, child_idx, parent_idx = hierarchy[0][i]
+        areas = [cv2.contourArea(cnt) for cnt in inner_contours]
+        output_coords = None
+        output_contour = None
+        for i, contour in enumerate(inner_contours):
+            if cv2.contourArea(contour) > 0:
+                M = cv2.moments(contour)
+                center_x = int(M["m10"] / M["m00"])
+                center_y = int(M["m01"] / M["m00"])
+                average_point = (center_x, center_y)
                 
-                if child_idx == -1:
-                    inner_contours.append(contour)
-                    cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
-
-            areas = [cv2.contourArea(cnt) for cnt in inner_contours]
-            larger_inner_contour = contours[np.argmax(areas)]
-            image = cv2.drawContours(image,[larger_inner_contour],
-                                                    -1, (0, 0, 255), 2)
-
-
-            for i, contour in enumerate(inner_contours):
-                epsilon = 0.02 * cv2.arcLength(contour, True)
-                approx = cv2.approxPolyDP(contour, epsilon, True)
-
-                sq_points = []
-                for point in approx:
-                    x, y = point.ravel()
-                    sq_points.append([x, y])
-                    cv2.circle(image, (x, y), 5, (0, 0, 255), -1)
-
-                x_coords = [point[0] for point in sq_points]
-                y_coords = [point[1] for point in sq_points]
-
-                avg_x = sum(x_coords) / len(x_coords)
-                avg_y = sum(y_coords) / len(y_coords)
-                average_point = (int(avg_x), int(avg_y))
                 if i == np.argmax(areas):
-                    self.final_average_point = (int(avg_x), int(avg_y))
+                    output_contour = contour
+                    output_coords = average_point
                     cv2.circle(image, average_point, 5, (255, 0, 0), -1)
                 else:
                     cv2.circle(image, average_point, 5, (0, 0, 255), -1)
 
-            cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
+        return output_contour, output_coords
 
+
+    def process_frame(self, image):
+
+        image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        
+
+        mask_brown = cv2.inRange(hsv, LOWER_BROWN, UPPER_BROWN)
+        mask_brown = cv2.erode(mask_brown, self.kernel, iterations=1)
+        mask_brown = cv2.dilate(mask_brown, self.kernel, iterations=1)
+
+        mask_green = cv2.inRange(hsv, LOWER_GREEN, UPPER_GREEN)
+        mask_green = cv2.erode(mask_green, self.kernel, iterations=1)
+        mask_green = cv2.dilate(mask_green, self.kernel, iterations=1)
+
+        mask_red = cv2.inRange(hsv, LOWER_RED, UPPER_RED)
+        mask_red = cv2.erode(mask_red, self.kernel, iterations=1)
+        mask_red = cv2.dilate(mask_red, self.kernel, iterations=1)
+
+        mask_combined = cv2.bitwise_or(mask_brown, mask_green)
+        mask = cv2.bitwise_or(mask_combined, mask_red)
+
+
+        contours_green, hierarchy_green = cv2.findContours(mask_brown,
+                                                cv2.RETR_TREE,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        contours_brown, hierarchy_brown = cv2.findContours(mask_green,
+                                                cv2.RETR_TREE,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        contours_red, hierarchy_red = cv2.findContours(mask_red,
+                                                cv2.RETR_TREE,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        fin_contour_green = None
+        fin_contour_red = None
+        fin_contour_brown = None
+        if len(contours_green) > 0:
+            fin_contour_green, _ = self.get_biggest_inner_contour(contours_green,
+                                                                     hierarchy_green, image)
+        if len(contours_brown) > 0:                                                           
+            fin_contour_brown, _ = self.get_biggest_inner_contour(contours_brown,
+                                                                     hierarchy_brown, image)
+        if len(contours_red) > 0:  
+            fin_contour_red, _ = self.get_biggest_inner_contour(contours_red,
+                                                                     hierarchy_red, image)
+
+        final_contours = [fin_contour_green, fin_contour_brown, fin_contour_red]
+        valid_contours = [contour for contour in final_contours if contour is not None]
+        if valid_contours:
+            largest_contour = max(valid_contours, key=cv2.contourArea)
+            M = cv2.moments(largest_contour)
+            center_x = int(M["m10"] / M["m00"])
+            center_y = int(M["m01"] / M["m00"])
+            self.final_average_point = (center_x, center_y)
+            cv2.circle(image, self.final_average_point, 5, (255, 255, 255), -1)
 
         cv2.imshow("res", mask)
         cv2.imshow("Tello Image", image)
@@ -138,6 +169,7 @@ class TelloSubscriber(Node):
         if self.final_average_point:
             array = Float32MultiArray(data=[self.final_average_point[0],
                                          self.final_average_point[1]])
+                                         
             self.frame_coord_pub.publish(array)
 
 def main(args=None):
