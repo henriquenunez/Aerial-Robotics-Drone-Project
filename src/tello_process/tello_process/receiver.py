@@ -166,9 +166,10 @@ class TelloSubscriber(Node):
         cv2.imshow("Tello Image", image)
         cv2.waitKey(1)
 
+        self.get_logger().info(f'Shape: {image.shape}')
         if self.final_average_point:
-            array = Float32MultiArray(data=[self.final_average_point[0],
-                                         self.final_average_point[1]])
+            array = Float32MultiArray(data=[(self.final_average_point[0] / image.shape[1]) * 2 - 1,
+                                            (self.final_average_point[1] / image.shape[0]) * 2 - 1])
                                          
             self.frame_coord_pub.publish(array)
 

@@ -46,8 +46,7 @@ class TelloController(Node):
         tgt_x, tgt_y = frame_target_coord
 
         speed = 0.01
-        
-        
+
         twist_msg.linear.x = 0.0
         twist_msg.linear.y = 0.0
         twist_msg.linear.z = 0.0
@@ -55,19 +54,22 @@ class TelloController(Node):
         twist_msg.angular.y = 0.0
         twist_msg.angular.z = 0.0
 
-        twist_msg.linear.x = speed/5
+        twist_msg.linear.x = speed * 30 
         
-        if tgt_x > 0.1:
+        if tgt_y > 0.1:
             twist_msg.linear.z = -speed
+            twist_msg.linear.x = 0.0 
+        elif tgt_y < -0.1:
+            twist_msg.linear.z = speed
+            twist_msg.linear.x = 0.0 
+ 
+        if tgt_x > 0.1:
+            twist_msg.linear.y = -speed
+            twist_msg.linear.x = 0.0 
  
         if tgt_x < -0.1:
-            twist_msg.linear.z = speed
- 
-        if tgt_y > 0.1:
-            twist_msg.linear.y = -speed
- 
-        if tgt_y < -0.1:
             twist_msg.linear.y = speed
+            twist_msg.linear.x = 0.0 
 
         return twist_msg
 
