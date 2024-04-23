@@ -15,6 +15,7 @@ class TelloController(Node):
     def __init__(self):
         super().__init__('tello_image_reciever')
         self.get_logger().info("Controller node initialized")
+        self.go_through = 0
         self.frame_coord_sub = self.create_subscription(
             Float32MultiArray,
             '/frame_coord',
@@ -46,8 +47,7 @@ class TelloController(Node):
         tgt_x, tgt_y = frame_target_coord
 
         speed = 0.01
-        
-        
+
         twist_msg.linear.x = 0.0
         twist_msg.linear.y = 0.0
         twist_msg.linear.z = 0.0
@@ -55,19 +55,37 @@ class TelloController(Node):
         twist_msg.angular.y = 0.0
         twist_msg.angular.z = 0.0
 
-        twist_msg.linear.x = speed/5
+        twist_msg.linear.x = speed * 30 
+
+        if self.go_through > 0:
+            self.go_through -= 1
+            return twist_msg
         
-        if tgt_x > 0.1:
-            twist_msg.linear.z = -speed
- 
-        if tgt_x < -0.1:
-            twist_msg.linear.z = speed
- 
+        okX = False
+        okY = False
+
         if tgt_y > 0.1:
-            twist_msg.linear.y = -speed
+            twist_msg.linear.z = -speed
+            twist_msg.linear.x = 0.0 
+        elif tgt_y < -0.1:
+            twist_msg.linear.z = speed
+            twist_msg.linear.x = 0.0 
+        else:
+            okX = True
  
-        if tgt_y < -0.1:
+        if tgt_x > 0.1:
+            twist_msg.linear.y = -speed
+            twist_msg.linear.x = 0.0 
+        elif tgt_x < -0.1:
             twist_msg.linear.y = speed
+            twist_msg.linear.x = 0.0 
+        else:
+            okY = True 
+
+        if okX and okY:
+            self.go_through = 5
+        else:
+            self.go_through = 0
 
         return twist_msg
 
@@ -82,3 +100,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
