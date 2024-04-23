@@ -37,7 +37,7 @@ def generate_launch_description():
         
         
         Node(package='tello_process', executable='receiver', output='screen'),
-        Node(package='tello_process', executable='controller', output='screen'),
+        # Node(package='tello_process', executable='controller', output='screen'),
         
         # Joystick driver, generates /namespace/joy messages
         Node(package='joy', executable='joy_node', output='screen', namespace=ns),

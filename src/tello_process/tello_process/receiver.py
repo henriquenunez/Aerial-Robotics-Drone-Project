@@ -5,6 +5,8 @@ from cv_bridge import CvBridge
 from std_msgs.msg import Float32MultiArray
 import cv2
 import numpy as np
+from filterpy.kalman import KalmanFilter
+
 
 LOWER_BROWN = np.array([74, 41, 48])
 UPPER_BROWN = np.array([128, 204, 206])
@@ -21,7 +23,7 @@ class TelloSubscriber(Node):
     def __init__(self):
         super().__init__('tello_image_reciever')
         self.final_average_point = []
-
+        self.init_kalman()
         self.subscription = self.create_subscription(
             Image,
             '/drone1/image_raw',
@@ -70,6 +72,25 @@ class TelloSubscriber(Node):
 
         # self.lower_bound = np.array([lower_h, lower_s, lower_v])
         # self.upper_bound = np.array([upper_h, upper_s, upper_v])
+
+    def init_kalman(self,):
+        self.kf = KalmanFilter(dim_x=4, dim_z=2)
+
+
+        # position_x, velocity_x, position_y, velocity_y)
+        self.kf.x = np.array([[400.], [0.], [400.], [0.]])
+
+        self.kf.P *= 1000.
+        self.kf.H = np.array([[1., 0., 0., 0.],
+                 [0., 0., 1., 0.]])
+        self.kf.R *= 1000  # some reasonable value
+        self.kf.Q *= 0.01
+        dt = 1  # Time step
+        self.kf.F = np.array([[1., dt, 0., 0.],
+                 [0., 1., 0., 0.],
+                 [0., 0., 1., dt],
+                 [0., 0., 0., 1.]])
+        return
 
     def image_callback(self, msg):
 
@@ -160,6 +181,13 @@ class TelloSubscriber(Node):
             center_x = int(M["m10"] / M["m00"])
             center_y = int(M["m01"] / M["m00"])
             self.final_average_point = (center_x, center_y)
+            self.get_logger().info(f'before kalman: {self.final_average_point}')                                
+            
+            self.kf.predict()
+            self.kf.update(self.final_average_point)
+
+            self.get_logger().info(f'after kalman: {self.final_average_point}')                                
+
             cv2.circle(image, self.final_average_point, 5, (255, 255, 255), -1)
 
         cv2.imshow("res", mask)
@@ -169,7 +197,7 @@ class TelloSubscriber(Node):
         if self.final_average_point:
             array = Float32MultiArray(data=[self.final_average_point[0],
                                          self.final_average_point[1]])
-                                         
+            # self.get_logger().info(f'publishing: {self.final_average_point}')                                
             self.frame_coord_pub.publish(array)
 
 def main(args=None):
