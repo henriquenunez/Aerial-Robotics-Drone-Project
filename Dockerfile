@@ -17,9 +17,10 @@ USER rosusr
 WORKDIR /home/rosusr
 COPY scripts/prepare_workspace.sh . 
 COPY scripts/run_everything.sh . 
-#COPY src/drone_project ./drone_racing_ws/src/drone_project
-#COPY src/example_cpp_pkg ./drone_racing_ws/src/example_cpp_pkg
 COPY src/tello_process ./drone_racing_ws/src/tello_process
+#COPY src/tello_gazebo ./drone_racing_ws/src/tello_gazebo
+COPY src/tello_ros ./drone_racing_ws/src/tello_ros
+COPY src/ros2_shared ./drone_racing_ws/src/ros2_shared
 
 USER root
 WORKDIR /home/rosusr/drone_racing_ws
