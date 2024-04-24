@@ -30,7 +30,7 @@ class TelloSubscriber(Node):
             self.image_callback,
             rclpy.qos.qos_profile_sensor_data
         )
-        self.kernel = np.ones((5, 5), np.uint8)
+        self.kernel = np.ones((7, 7), np.uint8)
 
         #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
         # cv2.namedWindow('Threshold Adjustments')
