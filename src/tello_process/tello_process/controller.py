@@ -36,7 +36,7 @@ class TelloController(Node):
         self.get_logger().info('took off!')
 
     def frame_coord_cb(self, data):
-        self.get_logger().info(f'Got: {data.data}')
+        # self.get_logger().info(f'Got: {data.data}')
 
         twist_msg = self.control(data.data)
         

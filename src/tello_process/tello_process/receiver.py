@@ -6,6 +6,10 @@ from std_msgs.msg import Float32MultiArray
 import cv2
 import numpy as np
 from filterpy.kalman import KalmanFilter
+import tensorflow as tf
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+
 
 
 LOWER_BROWN = np.array([74, 41, 48])
@@ -22,6 +26,11 @@ class TelloSubscriber(Node):
 
     def __init__(self):
         super().__init__('tello_image_reciever')
+
+        # self.yolo_model = tf.keras.models.load_model('yolov3-tiny.h5')
+        self.model = MobileNetV2(weights='imagenet')
+        
+
         self.final_average_point = []
         self.init_kalman()
         self.subscription = self.create_subscription(
@@ -60,6 +69,8 @@ class TelloSubscriber(Node):
         self.frame_coord_pub = self.create_publisher(Float32MultiArray, '/frame_coord', 10)
         self.get_logger().info("Image subscriber node initialized")
 
+    
+
     def update_threshold(self, x):
         pass
         #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
@@ -77,7 +88,6 @@ class TelloSubscriber(Node):
 
     def init_kalman(self,):
         self.kf = KalmanFilter(dim_x=4, dim_z=2)
-
 
         # position_x, velocity_x, position_y, velocity_y)
         self.kf.x = np.array([[400.], [0.], [400.], [0.]])
@@ -100,50 +110,39 @@ class TelloSubscriber(Node):
         cv_image = CvBridge().imgmsg_to_cv2(msg, "bgr8")
         self.process_frame(cv_image)
 
-    def get_biggest_inner_contour(self, contours, hierarchy, image):
+    def search_stop_sign(self, image):
 
-        cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
-        inner_contours = []
-        for i, contour in enumerate(contours):
+        cloned_image = image.copy()
+        cloned_image = cv2.resize(cloned_image, (224, 224))
+        input_image = preprocess_input(cloned_image)  # Preprocess input image for MobileNetV2
+        predictions = self.model.predict(np.expand_dims(input_image, axis=0))
 
-            hierarchy_info = hierarchy[0][i]
-    
-            # Check if the contour has exactly one parent
-            if hierarchy_info[3] != -1:  # If the contour has a parent
-                parent_index = hierarchy_info[3]
-                parent_hierarchy_info = hierarchy[0][parent_index]
-                
-                # Check if the parent has no child other than the current contour
-                has_only_one_child = parent_hierarchy_info[2] == i
-                if has_only_one_child:
-                    inner_contours.append(contour)
-                    cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)     
+        decoded_predictions = decode_predictions(predictions, top=5)[0]
 
-        areas = [cv2.contourArea(cnt) for cnt in inner_contours]
-        output_coords = None
-        output_contour = None
-        for i, contour in enumerate(inner_contours):
-            if cv2.contourArea(contour) > 0:
-                M = cv2.moments(contour)
-                center_x = int(M["m10"] / M["m00"])
-                center_y = int(M["m01"] / M["m00"])
-                average_point = (center_x, center_y)
-                
-                if i == np.argmax(areas):
-                    output_contour = contour
-                    output_coords = average_point
-                    cv2.circle(image, average_point, 5, (255, 0, 0), -1)
-                else:
-                    cv2.circle(image, average_point, 5, (0, 0, 255), -1)
+        for i, (class_id, class_label, confidence) in enumerate(decoded_predictions):
+            if 'street_sign' in class_label.lower():  # Check if the predicted class label contains "stop"
+                # Print the detected class label and confidence score
+                print(f"Detected class: {class_label}, Confidence: {confidence}")
 
-        return output_contour, output_coords
+                # Draw bounding box around the detected object
+                # cv2.rectangle(image, (0, 0), (image.shape[1],
+                                                    #   image.shape[0]), (0, 255, 0), 2)
+
+                # Add label and confidence score to the image
+                # label = f"{class_label}: {confidence}"
+                # cv2.putText(image, label, (10, 30),
+                            #  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 
     def process_frame(self, image):
 
-        image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
-        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        # self.detect_traffic_signs()
         
+        image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+
+        self.search_stop_sign(image)
+
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         mask_brown = cv2.inRange(hsv, LOWER_BROWN, UPPER_BROWN)
         mask_brown = cv2.erode(mask_brown, self.kernel, iterations=1)
@@ -191,12 +190,12 @@ class TelloSubscriber(Node):
             center_x = int(M["m10"] / M["m00"])
             center_y = int(M["m01"] / M["m00"])
             self.final_average_point = (center_x, center_y)
-            self.get_logger().info(f'before kalman: {self.final_average_point}')                                
+            # self.get_logger().info(f'before kalman: {self.final_average_point}')                                
             
             self.kf.predict()
             self.kf.update(self.final_average_point)
 
-            self.get_logger().info(f'after kalman: {self.final_average_point}')                                
+            # self.get_logger().info(f'after kalman: {self.final_average_point}')                                
 
             cv2.circle(image, self.final_average_point, 5, (255, 255, 255), -1)
 
@@ -204,10 +203,8 @@ class TelloSubscriber(Node):
         cv2.imshow("Tello Image", image)
         cv2.waitKey(1)
 
-        self.get_logger().info(f'Shape: {image.shape}')
         if self.final_average_point:
  
-            # average list
             xp = np.mean([p[0] for p in self.final_point_list_filt])
             yp = np.mean([p[1] for p in self.final_point_list_filt])
 
@@ -215,11 +212,49 @@ class TelloSubscriber(Node):
             if len(self.final_point_list_filt) > self.filt_size:
                 self.final_point_list_filt.pop(0)
 
-
             array = Float32MultiArray(data=[(xp / image.shape[1]) * 2 - 1,
                                  (yp / image.shape[0]) * 2 - 1])
                                          
             self.frame_coord_pub.publish(array)
+
+
+    def get_biggest_inner_contour(self, contours, hierarchy, image):
+
+        cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
+        inner_contours = []
+        for i, contour in enumerate(contours):
+
+            hierarchy_info = hierarchy[0][i]
+    
+            if hierarchy_info[3] != -1:  # If the contour has a parent
+                parent_index = hierarchy_info[3]
+                parent_hierarchy_info = hierarchy[0][parent_index]
+                
+                has_only_one_child = parent_hierarchy_info[2] == i
+                if has_only_one_child:
+                    inner_contours.append(contour)
+                    cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)     
+
+        areas = [cv2.contourArea(cnt) for cnt in inner_contours]
+        output_coords = None
+        output_contour = None
+        for i, contour in enumerate(inner_contours):
+            if cv2.contourArea(contour) > 0:
+                M = cv2.moments(contour)
+                center_x = int(M["m10"] / M["m00"])
+                center_y = int(M["m01"] / M["m00"])
+                average_point = (center_x, center_y)
+                
+                if i == np.argmax(areas):
+                    output_contour = contour
+                    output_coords = average_point
+                    cv2.circle(image, average_point, 5, (255, 0, 0), -1)
+                else:
+                    cv2.circle(image, average_point, 5, (0, 0, 255), -1)
+
+        return output_contour, output_coords
+    
+    
 
 def main(args=None):
     rclpy.init(args=args)

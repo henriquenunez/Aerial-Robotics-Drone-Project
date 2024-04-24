@@ -278,10 +278,10 @@
       <pose>0.436387 8.05231 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>916 490000000</sim_time>
-      <real_time>51 881520382</real_time>
-      <wall_time>1713994567 469839038</wall_time>
-      <iterations>50723</iterations>
+      <sim_time>678 346000000</sim_time>
+      <real_time>24 7112264</real_time>
+      <wall_time>1713993739 357838245</wall_time>
+      <iterations>23603</iterations>
       <model name='Stop Sign'>
         <pose>-0.000501 8.94185 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -302,34 +302,44 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='circle_gate_green_short_0'>
-        <pose>-0.59696 -0.458203 0.05 -0 -0 -0</pose>
+      <model name='circle_gate_blue'>
+        <pose>0.032126 4.60174 0.05 0 0 -1.9e-05</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>-0.59696 -0.458203 0.05 -0 -0 -0</pose>
+          <pose>0.032126 4.60174 0.05 0 0 -1.9e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0 0 -0.095576 -1.76885 -1.22309 -3.14159</acceleration>
-          <wrench>-0 0 -0.095576 0 -0 0</wrench>
+          <acceleration>-0 -0 -0 0 -0 0</acceleration>
+          <wrench>-0 -0 -0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='circle_gate_green_tall'>
+        <pose>0.011671 1.56533 0.05 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link_0'>
+          <pose>0.011671 1.56533 0.05 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-0 0 0 0 -0 0</acceleration>
+          <wrench>-0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='euro_pallet'>
-        <pose>-0.398772 8.07963 0.121988 2e-05 -0 -0.016856</pose>
+        <pose>-0.398813 8.07963 0.121995 -8e-06 -0 -0.016907</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-0.398772 8.07963 0.121988 2e-05 -0 -0.016856</pose>
+          <pose>-0.398813 8.07963 0.121995 -8e-06 -0 -0.016907</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.066608 -2.62891 -1.99265 -1.186 -0.216417 0.00314</acceleration>
-          <wrench>-1.33216 -52.5781 -39.853 0 -0 0</wrench>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -196 0 -0 0</wrench>
         </link>
       </model>
       <model name='euro_pallet_0'>
-        <pose>0.410218 8.0454 0.121988 2e-05 -0 -0.016863</pose>
+        <pose>0.410177 8.0454 0.121995 -8e-06 -0 -0.016914</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>0.410218 8.0454 0.121988 2e-05 -0 -0.016863</pose>
+          <pose>0.410177 8.0454 0.121995 -8e-06 -0 -0.016914</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.066626 -2.62891 -1.99265 -1.186 -0.216363 0.00314</acceleration>
-          <wrench>-1.33252 -52.5781 -39.853 0 -0 0</wrench>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -196 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -342,24 +352,14 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='square_gate_blue_0'>
-        <pose>0.157511 3.08153 0.05 0 -0 0.000399</pose>
-        <scale>1 1 1</scale>
-        <link name='link_0'>
-          <pose>0.157511 3.08153 0.05 0 -0 0.000399</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -4e-06 0 -7e-06 0</acceleration>
-          <wrench>0 0 -4e-06 0 -0 0</wrench>
-        </link>
-      </model>
       <model name='square_gate_red'>
-        <pose>0.072527 5.13525 0.05 0 -0 0.000399</pose>
+        <pose>0.002348 -0.335506 0.05 0 -0 0.000399</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>0.072527 5.13525 0.05 0 -0 0.000399</pose>
+          <pose>0.002348 -0.335506 0.05 0 -0 0.000399</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 -0 -3e-06 3e-06 -6e-06 0</acceleration>
-          <wrench>0 -0 -3e-06 0 -0 0</wrench>
+          <acceleration>-1e-06 -1e-06 0.601666 0.790509 0.613609 3.14159</acceleration>
+          <wrench>-1e-06 -1e-06 0.601666 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
@@ -368,116 +368,11 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>1.68641 -9.37522 7.42738 0 0.623973 1.67215</pose>
+        <pose>6.13128 -7.12257 7.81794 0 0.583973 2.22415</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <model name='square_gate_blue_0'>
-      <link name='link_0'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.166667</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.166667</iyy>
-            <iyz>0</iyz>
-            <izz>0.166667</izz>
-          </inertia>
-          <pose>0 0 0 0 -0 0</pose>
-        </inertial>
-        <pose>-0 -0 0 0 -0 0</pose>
-        <gravity>1</gravity>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <enable_wind>0</enable_wind>
-        <visual name='visual'>
-          <pose>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://square_gate_blue/square_gate.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <material>
-            <lighting>1</lighting>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
-            </script>
-            <shader type='pixel'>
-              <normal_map>__default__</normal_map>
-            </shader>
-            <ambient>0.125 0.29 0.529 1</ambient>
-            <diffuse>0.7 0.7 0.7 1</diffuse>
-            <specular>0.01 0.01 0.01 1</specular>
-            <emissive>0 0 0 1</emissive>
-          </material>
-          <transparency>0</transparency>
-          <cast_shadows>1</cast_shadows>
-        </visual>
-        <collision name='collision'>
-          <laser_retro>0</laser_retro>
-          <max_contacts>10</max_contacts>
-          <pose>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://square_gate_blue/square_gate.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-                <fdir1>0 0 0</fdir1>
-                <slip1>0</slip1>
-                <slip2>0</slip2>
-              </ode>
-              <torsional>
-                <coefficient>1</coefficient>
-                <patch_radius>0</patch_radius>
-                <surface_radius>0</surface_radius>
-                <use_patch_radius>1</use_patch_radius>
-                <ode>
-                  <slip>0</slip>
-                </ode>
-              </torsional>
-            </friction>
-            <bounce>
-              <restitution_coefficient>0</restitution_coefficient>
-              <threshold>1e+06</threshold>
-            </bounce>
-            <contact>
-              <collide_without_contact>0</collide_without_contact>
-              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
-              <collide_bitmask>1</collide_bitmask>
-              <ode>
-                <soft_cfm>0</soft_cfm>
-                <soft_erp>0.2</soft_erp>
-                <kp>1e+13</kp>
-                <kd>1</kd>
-                <max_vel>0.01</max_vel>
-                <min_depth>0</min_depth>
-              </ode>
-              <bullet>
-                <split_impulse>1</split_impulse>
-                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
-                <soft_cfm>0</soft_cfm>
-                <soft_erp>0.2</soft_erp>
-                <kp>1e+13</kp>
-                <kd>1</kd>
-              </bullet>
-            </contact>
-          </surface>
-        </collision>
-      </link>
-      <static>0</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose>0.157041 3.08411 0 0 -0 0</pose>
-    </model>
     <model name='square_gate_red'>
       <link name='link_0'>
         <inertial>
@@ -581,9 +476,9 @@
       </link>
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>0.072057 5.13783 0 0 -0 0</pose>
+      <pose>0.001878 -0.332923 0 0 -0 0</pose>
     </model>
-    <model name='circle_gate_green_short_0'>
+    <model name='circle_gate_green_tall'>
       <link name='link_0'>
         <inertial>
           <mass>1</mass>
@@ -606,7 +501,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://circle_gate_green_short/circle_gate_short.dae</uri>
+              <uri>model://circle_gate_green_tall/circle_gate_tall.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -633,7 +528,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://circle_gate_green_short/circle_gate_short.dae</uri>
+              <uri>model://circle_gate_green_tall/circle_gate_tall.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -686,7 +581,112 @@
       </link>
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>-0.59696 -0.458203 0 0 -0 0</pose>
+      <pose>0.011671 1.56533 0 0 -0 0</pose>
+    </model>
+    <model name='circle_gate_blue'>
+      <link name='link_0'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.166667</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.166667</iyy>
+            <iyz>0</iyz>
+            <izz>0.166667</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <pose>0 -0 0 0 -0 0</pose>
+        <gravity>1</gravity>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <enable_wind>0</enable_wind>
+        <visual name='visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://circle_gate_blue/circle_gate.dae</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <lighting>1</lighting>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+            <shader type='pixel'>
+              <normal_map>__default__</normal_map>
+            </shader>
+            <ambient>0.125 0.29 0.529 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+            <specular>0.01 0.01 0.01 1</specular>
+            <emissive>0 0 0 1</emissive>
+          </material>
+          <transparency>0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://circle_gate_blue/circle_gate.dae</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <coefficient>1</coefficient>
+                <patch_radius>0</patch_radius>
+                <surface_radius>0</surface_radius>
+                <use_patch_radius>1</use_patch_radius>
+                <ode>
+                  <slip>0</slip>
+                </ode>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <static>0</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose>0.032142 4.60173 0 0 -0 0</pose>
     </model>
   </world>
 </sdf>
