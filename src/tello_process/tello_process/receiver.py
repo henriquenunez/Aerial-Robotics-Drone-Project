@@ -31,6 +31,8 @@ class TelloSubscriber(Node):
             rclpy.qos.qos_profile_sensor_data
         )
         self.kernel = np.ones((7, 7), np.uint8)
+        self.final_point_list_filt = []
+        self.filt_size = 10
 
         #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
         # cv2.namedWindow('Threshold Adjustments')
@@ -204,8 +206,18 @@ class TelloSubscriber(Node):
 
         self.get_logger().info(f'Shape: {image.shape}')
         if self.final_average_point:
-            array = Float32MultiArray(data=[(self.final_average_point[0] / image.shape[1]) * 2 - 1,
-                                            (self.final_average_point[1] / image.shape[0]) * 2 - 1])
+ 
+            # average list
+            xp = np.mean([p[0] for p in self.final_point_list_filt])
+            yp = np.mean([p[1] for p in self.final_point_list_filt])
+
+            self.final_point_list_filt.append((self.final_average_point[0], self.final_average_point[1]))
+            if len(self.final_point_list_filt) > self.filt_size:
+                self.final_point_list_filt.pop(0)
+
+
+            array = Float32MultiArray(data=[(xp / image.shape[1]) * 2 - 1,
+                                 (yp / image.shape[0]) * 2 - 1])
                                          
             self.frame_coord_pub.publish(array)
 
