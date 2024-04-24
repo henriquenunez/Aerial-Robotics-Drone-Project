@@ -36,7 +36,6 @@ def generate_launch_description():
         # Publish static transforms
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen', arguments=[urdf_path]),
         
-        
         Node(package='tello_process', executable='receiver', output='screen'),
         Node(package='tello_process', executable='controller', output='screen'),
         
@@ -46,9 +45,7 @@ def generate_launch_description():
         # Joystick controller, generates /namespace/cmd_vel messages
         Node(package='tello_driver', executable='tello_joy_main', output='screen', namespace=ns),
 
-     #    Node(package='rviz2', executable='rviz2', namespace=ns, output='screen'),
-
-     #    Node(package='example_cpp_pkg', executable='tracker', outputTelloSubscrbver='screen', namespace=ns) # arguments=['image:=/drone1/image_raw']
-
-        # Node(package='image_view', executable='image_view', output='screen', namespace=ns, arguments=['image:=/drone1/image_raw'])
+        #Node(package='rviz2', executable='rviz2', namespace=ns, output='screen'),
+        #Node(package='example_cpp_pkg', executable='tracker', outputTelloSubscrbver='screen', namespace=ns) # arguments=['image:=/drone1/image_raw']
+        #Node(package='image_view', executable='image_view', output='screen', namespace=ns, arguments=['image:=/drone1/image_raw'])
     ])
