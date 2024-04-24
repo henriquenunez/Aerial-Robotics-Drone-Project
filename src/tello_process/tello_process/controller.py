@@ -9,6 +9,7 @@ from tello_msgs.srv import TelloAction
 from geometry_msgs.msg import Twist
 import random
 import time
+import math
 
 class TelloController(Node):
 
@@ -36,7 +37,7 @@ class TelloController(Node):
         self.get_logger().info('took off!')
 
     def frame_coord_cb(self, data):
-        # self.get_logger().info(f'Got: {data.data}')
+        self.get_logger().info(f'Got: {data.data}')
 
         twist_msg = self.control(data.data)
         
@@ -44,10 +45,6 @@ class TelloController(Node):
 
     def control(self, frame_target_coord):
         twist_msg = Twist()
-        tgt_x, tgt_y = frame_target_coord
-
-        speed = 0.03
-
         twist_msg.linear.x = 0.0
         twist_msg.linear.y = 0.0
         twist_msg.linear.z = 0.0
@@ -55,42 +52,54 @@ class TelloController(Node):
         twist_msg.angular.y = 0.0
         twist_msg.angular.z = 0.0
 
-        twist_msg.linear.x = 0.08 
+        tgt_x, tgt_y, detected_stop, conf_stop = frame_target_coord
 
-        #if self.go_through > 0:
-        #    self.go_through -= 1
-        #    return twist_msg
-        
-        okX = False
-        okY = False
+        if tgt_x > -1000 and tgt_y > -1000 :
+            speed = 0.03
+            twist_msg.linear.x = 0.08 
 
-        if tgt_y > 0.1:
-            twist_msg.linear.z = -speed
-            #twist_msg.angular.y = speed
-            twist_msg.linear.x = 0.0 
-        elif tgt_y < -0.1:
-            twist_msg.linear.z = speed
-            #twist_msg.angular.y = -speed
-            twist_msg.linear.x = 0.0 
+            #if self.go_through > 0:
+            #    self.go_through -= 1
+            #    return twist_msg
+            
+            okX = False
+            okY = False
+
+            if tgt_y > 0.1:
+                twist_msg.linear.z = -speed
+                #twist_msg.angular.y = speed
+                twist_msg.linear.x = 0.0 
+            elif tgt_y < -0.1:
+                twist_msg.linear.z = speed
+                #twist_msg.angular.y = -speed
+                twist_msg.linear.x = 0.0 
+            else:
+                okX = True
+    
+            if tgt_x > 0.1:
+                #twist_msg.linear.y = -speed
+                twist_msg.angular.z = -speed / 2
+                twist_msg.linear.x = 0.0 
+            elif tgt_x < -0.1:
+                #twist_msg.linear.y = speed
+                twist_msg.angular.z = speed / 2
+                twist_msg.linear.x = 0.0 
+            else:
+                okY = True 
+
+            if okX and okY:
+                self.go_through = 5
+            else:
+                self.go_through = 0
         else:
-            okX = True
- 
-        if tgt_x > 0.1:
-            #twist_msg.linear.y = -speed
-            twist_msg.angular.z = -speed / 2
-            twist_msg.linear.x = 0.0 
-        elif tgt_x < -0.1:
-            #twist_msg.linear.y = speed
-            twist_msg.angular.z = speed / 2
-            twist_msg.linear.x = 0.0 
-        else:
-            okY = True 
+            if detected_stop == 1.0 and (not math.isnan(tgt_x)) and conf_stop > 0.5:
+                self.get_logger().info('Landing Tello')
+                self.tello_req.cmd = 'land'
+                takeoff_future = self.tello_client.call_async(self.tello_req)
+                rclpy.spin(self, takeoff_future)
+                self.get_logger().info('Tello Landed')
 
-        if okX and okY:
-            self.go_through = 5
-        else:
-            self.go_through = 0
-
+            
         return twist_msg
 
 def main(args=None):

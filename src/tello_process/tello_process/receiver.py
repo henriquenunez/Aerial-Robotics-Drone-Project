@@ -29,7 +29,8 @@ class TelloSubscriber(Node):
 
         # self.yolo_model = tf.keras.models.load_model('yolov3-tiny.h5')
         self.model = MobileNetV2(weights='imagenet')
-        
+        self.detected_stop = 0.0
+        self.stop_sign_conf = 0.0
 
         self.final_average_point = []
         self.init_kalman()
@@ -114,21 +115,19 @@ class TelloSubscriber(Node):
 
         cloned_image = image.copy()
         cloned_image = cv2.resize(cloned_image, (224, 224))
-        input_image = preprocess_input(cloned_image)  # Preprocess input image for MobileNetV2
+        input_image = preprocess_input(cloned_image) 
         predictions = self.model.predict(np.expand_dims(input_image, axis=0))
 
         decoded_predictions = decode_predictions(predictions, top=5)[0]
 
         for i, (class_id, class_label, confidence) in enumerate(decoded_predictions):
-            if 'street_sign' in class_label.lower():  # Check if the predicted class label contains "stop"
-                # Print the detected class label and confidence score
+            if 'street_sign' in class_label.lower():  
                 print(f"Detected class: {class_label}, Confidence: {confidence}")
-
-                # Draw bounding box around the detected object
+                self.detected_stop = 1.0
+                self.stop_sign_conf = confidence
                 # cv2.rectangle(image, (0, 0), (image.shape[1],
                                                     #   image.shape[0]), (0, 255, 0), 2)
 
-                # Add label and confidence score to the image
                 # label = f"{class_label}: {confidence}"
                 # cv2.putText(image, label, (10, 30),
                             #  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
@@ -136,8 +135,9 @@ class TelloSubscriber(Node):
 
     def process_frame(self, image):
 
-        # self.detect_traffic_signs()
-        
+        self.detected_stop = 0.0
+        self.stop_sign_conf = 0.0
+        self.final_average_point = None
         image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
 
         self.search_stop_sign(image)
@@ -213,7 +213,16 @@ class TelloSubscriber(Node):
                 self.final_point_list_filt.pop(0)
 
             array = Float32MultiArray(data=[(xp / image.shape[1]) * 2 - 1,
-                                 (yp / image.shape[0]) * 2 - 1])
+                                 (yp / image.shape[0]) * 2 - 1, 
+                                 self.detected_stop,
+                                 self.stop_sign_conf])
+                                         
+            self.frame_coord_pub.publish(array)
+        else:
+            array = Float32MultiArray(data=[-1000,
+                                             -1000,
+                                       self.detected_stop ,
+                                         self.stop_sign_conf])
                                          
             self.frame_coord_pub.publish(array)
 
