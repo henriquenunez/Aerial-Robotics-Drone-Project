@@ -103,11 +103,19 @@ class TelloSubscriber(Node):
         cv2.drawContours(image, contours, -1, (255, 100, 100), 2)
         inner_contours = []
         for i, contour in enumerate(contours):
-            _, _, child_idx, parent_idx = hierarchy[0][i]
-            
-            if child_idx == -1:
-                inner_contours.append(contour)
-                cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)
+
+            hierarchy_info = hierarchy[0][i]
+    
+            # Check if the contour has exactly one parent
+            if hierarchy_info[3] != -1:  # If the contour has a parent
+                parent_index = hierarchy_info[3]
+                parent_hierarchy_info = hierarchy[0][parent_index]
+                
+                # Check if the parent has no child other than the current contour
+                has_only_one_child = parent_hierarchy_info[2] == i
+                if has_only_one_child:
+                    inner_contours.append(contour)
+                    cv2.drawContours(image, [contour], -1, (0, 255, 255), 2)     
 
         areas = [cv2.contourArea(cnt) for cnt in inner_contours]
         output_coords = None
