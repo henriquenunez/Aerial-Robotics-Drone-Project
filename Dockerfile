@@ -10,6 +10,7 @@ RUN sudo apt install -y python3-pip
 RUN sudo apt install -y mesa-utils 
 RUN sudo apt install -y git 
 RUN pip3 install transformations
+RUN pip3 install filterpy 
 
 RUN useradd -m rosusr
 USER rosusr

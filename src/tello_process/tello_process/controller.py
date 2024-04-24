@@ -57,9 +57,9 @@ class TelloController(Node):
 
         twist_msg.linear.x = speed * 30 
 
-        if self.go_through > 0:
-            self.go_through -= 1
-            return twist_msg
+        #if self.go_through > 0:
+        #    self.go_through -= 1
+        #    return twist_msg
         
         okX = False
         okY = False
