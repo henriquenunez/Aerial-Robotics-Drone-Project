@@ -12,7 +12,7 @@ def generate_launch_description():
     ns = 'drone1'
     # world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'final_world.world')
     # world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'track1_1.world')
-    world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'stop.world')
+    world_path = os.path.join(get_package_share_directory('tello_gazebo'), 'worlds', 'track2.world')
     urdf_path = os.path.join(get_package_share_directory('tello_description'), 'urdf', 'tello_1.urdf')
 
     package_name = "tello_gazebo"  

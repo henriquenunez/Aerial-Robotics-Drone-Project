@@ -55,7 +55,7 @@ class TelloController(Node):
         tgt_x, tgt_y, detected_stop, conf_stop = frame_target_coord
 
         if tgt_x > -1000 and tgt_y > -1000 :
-            speed = 0.03
+            speed = 0.08
             twist_msg.linear.x = 0.08 
 
             #if self.go_through > 0:
@@ -101,7 +101,10 @@ class TelloController(Node):
                 takeoff_future = self.tello_client.call_async(self.tello_req)
                 rclpy.spin(self, takeoff_future)
                 self.get_logger().info('Tello Landed')
-
+            else:
+                twist_msg.linear.x = 0.05
+                twist_msg.linear.y = 0.00
+                twist_msg.linear.z = 0.00
          
         self.get_logger().info(f'Sending Twist: {twist_msg}')
         return twist_msg
