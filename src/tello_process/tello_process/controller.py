@@ -65,12 +65,15 @@ class TelloController(Node):
             okX = False
             okY = False
 
+            speed_z = speed * abs(tgt_y)
+            speed_ang = speed * abs(tgt_x)
+
             if tgt_y > 0.1:
-                twist_msg.linear.z = -speed
+                twist_msg.linear.z = -speed_z
                 #twist_msg.angular.y = speed
                 twist_msg.linear.x = 0.0 
             elif tgt_y < -0.1:
-                twist_msg.linear.z = speed
+                twist_msg.linear.z = speed_z
                 #twist_msg.angular.y = -speed
                 twist_msg.linear.x = 0.0 
             else:
@@ -78,11 +81,11 @@ class TelloController(Node):
     
             if tgt_x > 0.1:
                 #twist_msg.linear.y = -speed
-                twist_msg.angular.z = -speed / 2
+                twist_msg.angular.z = -speed_ang
                 twist_msg.linear.x = 0.0 
             elif tgt_x < -0.1:
                 #twist_msg.linear.y = speed
-                twist_msg.angular.z = speed / 2
+                twist_msg.angular.z = speed_ang
                 twist_msg.linear.x = 0.0 
             else:
                 okY = True 
@@ -99,7 +102,8 @@ class TelloController(Node):
                 rclpy.spin(self, takeoff_future)
                 self.get_logger().info('Tello Landed')
 
-            
+         
+        self.get_logger().info(f'Sending Twist: {twist_msg}')
         return twist_msg
 
 def main(args=None):

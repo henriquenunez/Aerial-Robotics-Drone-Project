@@ -11,6 +11,7 @@ RUN sudo apt install -y mesa-utils
 RUN sudo apt install -y git 
 RUN pip3 install transformations
 RUN pip3 install filterpy 
+RUN pip3 install tensorflow 
 
 RUN useradd -m rosusr
 USER rosusr
@@ -22,6 +23,7 @@ COPY src/tello_process ./drone_racing_ws/src/tello_process
 #COPY src/tello_gazebo ./drone_racing_ws/src/tello_gazebo
 COPY src/tello_ros ./drone_racing_ws/src/tello_ros
 COPY src/ros2_shared ./drone_racing_ws/src/ros2_shared
+COPY src/tello_ros ./drone_racing_ws/src/tello_ros
 
 USER root
 WORKDIR /home/rosusr/drone_racing_ws
