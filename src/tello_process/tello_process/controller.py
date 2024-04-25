@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Int32, Float32MultiArray
 import cv2
 from rclpy.action import ActionClient
 from tello_msgs.srv import TelloAction
@@ -23,6 +23,14 @@ class TelloController(Node):
             self.frame_coord_cb,
             rclpy.qos.qos_profile_sensor_data
         )
+        self.is_passing_frame_cnt = 0
+        self.should_stop = False
+        self.passing_frame_sub = self.create_subscription(
+            Int32,
+            '/passing_frame',
+            self.pass_frame_cb,
+            rclpy.qos.qos_profile_sensor_data
+        )
         self.tello_vel_pub = self.create_publisher(Twist, '/drone1/cmd_vel', 10)
 
         self.tello_client = self.create_client(TelloAction, '/drone1/tello_action')
@@ -35,6 +43,11 @@ class TelloController(Node):
         takeoff_future = self.tello_client.call_async(self.tello_req)
         rclpy.spin_until_future_complete(self, takeoff_future)
         self.get_logger().info('took off!')
+    
+    def pass_frame_cb(self, data):
+        if self.should_stop == False and self.is_passing_frame_cnt == 0:
+            self.is_passing_frame_cnt = 5
+        self.get_logger().info('Waiting to stop!')
 
     def frame_coord_cb(self, data):
         self.get_logger().info(f'Got: {data.data}')
@@ -54,7 +67,12 @@ class TelloController(Node):
 
         tgt_x, tgt_y, detected_stop, conf_stop = frame_target_coord
 
-        if tgt_x > -1000 and tgt_y > -1000 :
+        if self.is_passing_frame_cnt > 0:
+            self.is_passing_frame_cnt -= 1
+            twist_msg.linear.x = 0.05 
+            return twist_msg
+
+        if tgt_x > -1000 and tgt_y > -1000:
             speed = 0.03
             twist_msg.linear.x = 0.08 
 
@@ -68,22 +86,22 @@ class TelloController(Node):
             speed_z = speed * abs(tgt_y)
             speed_ang = speed * abs(tgt_x)
 
-            if tgt_y > 0.1:
+            if tgt_y > 0.05:
                 twist_msg.linear.z = -speed_z
                 #twist_msg.angular.y = speed
                 twist_msg.linear.x = 0.0 
-            elif tgt_y < -0.1:
+            elif tgt_y < -0.05:
                 twist_msg.linear.z = speed_z
                 #twist_msg.angular.y = -speed
                 twist_msg.linear.x = 0.0 
             else:
                 okX = True
     
-            if tgt_x > 0.1:
+            if tgt_x > 0.05:
                 #twist_msg.linear.y = -speed
                 twist_msg.angular.z = -speed_ang
                 twist_msg.linear.x = 0.0 
-            elif tgt_x < -0.1:
+            elif tgt_x < -0.05:
                 #twist_msg.linear.y = speed
                 twist_msg.angular.z = speed_ang
                 twist_msg.linear.x = 0.0 
@@ -96,13 +114,16 @@ class TelloController(Node):
                 self.go_through = 0
         else:
             if detected_stop == 1.0 and (not math.isnan(tgt_x)) and conf_stop > 0.5:
-                self.get_logger().info('Landing Tello')
-                self.tello_req.cmd = 'land'
-                takeoff_future = self.tello_client.call_async(self.tello_req)
-                rclpy.spin(self, takeoff_future)
-                self.get_logger().info('Tello Landed')
+                self.should_stop = True
+                self.get_logger().info('Should stop')
 
-         
+        if self.should_stop and self.is_passing_frame_cnt == 0:
+            self.get_logger().info('Landing Tello')
+            self.tello_req.cmd = 'land'
+            takeoff_future = self.tello_client.call_async(self.tello_req)
+            rclpy.spin(self, takeoff_future)
+            self.get_logger().info('Tello Landed')
+ 
         self.get_logger().info(f'Sending Twist: {twist_msg}')
         return twist_msg
 

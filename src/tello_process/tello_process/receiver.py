@@ -2,15 +2,13 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Int32, Float32MultiArray
 import cv2
 import numpy as np
 from filterpy.kalman import KalmanFilter
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
-
-
 
 LOWER_BROWN = np.array([74, 41, 48])
 UPPER_BROWN = np.array([128, 204, 206])
@@ -20,7 +18,6 @@ UPPER_GREEN = np.array([70, 255, 255])
 
 LOWER_RED = np.array([0, 80, 50])
 UPPER_RED = np.array([50, 255, 255])
-
 
 class TelloSubscriber(Node):
 
@@ -68,9 +65,8 @@ class TelloSubscriber(Node):
         # cv2.setTrackbarPos('Upper V', 'Threshold Adjustments', 255)
 
         self.frame_coord_pub = self.create_publisher(Float32MultiArray, '/frame_coord', 10)
+        self.pass_frame_pub = self.create_publisher(Int32, '/passing_frame', 10)
         self.get_logger().info("Image subscriber node initialized")
-
-    
 
     def update_threshold(self, x):
         pass
@@ -159,7 +155,6 @@ class TelloSubscriber(Node):
         mask_combined = cv2.bitwise_or(mask_brown, mask_green)
         mask = cv2.bitwise_or(mask_combined, mask_red)
 
-
         contours_green, hierarchy_green = cv2.findContours(mask_brown,
                                                 cv2.RETR_TREE,
                                                   cv2.CHAIN_APPROX_SIMPLE)
@@ -199,7 +194,14 @@ class TelloSubscriber(Node):
 
             cv2.circle(image, self.final_average_point, 5, (255, 255, 255), -1)
 
-        cv2.imshow("res", mask)
+            large_contour_area = cv2.contourArea(largest_contour)
+            if large_contour_area > 30000:
+                self.get_logger().info(f"Largest contour size {large_contour_area}")
+                lc_msg = Int32()
+                lc_msg.data = 1
+                self.pass_frame_pub.publish(lc_msg)
+
+        #cv2.imshow("res", mask)
         cv2.imshow("Tello Image", image)
         cv2.waitKey(1)
 
@@ -225,6 +227,10 @@ class TelloSubscriber(Node):
                                          self.stop_sign_conf])
                                          
             self.frame_coord_pub.publish(array)
+            lc_msg = Int32()
+            lc_msg.data = 1
+            self.pass_frame_pub.publish(lc_msg)
+
 
 
     def get_biggest_inner_contour(self, contours, hierarchy, image):
