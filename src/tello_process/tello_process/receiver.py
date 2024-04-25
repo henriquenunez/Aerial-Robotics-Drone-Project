@@ -32,6 +32,12 @@ class TelloSubscriber(Node):
         self.detected_stop = 0.0
         self.stop_sign_conf = 0.0
 
+        self.net = cv2.dnn.readNet("src/tello_process/tello_process/yolov3-tiny.weights",
+                                    "src/tello_process/tello_process/yolov3-tiny.cfg")
+        with open("src/tello_process/tello_process/coco.names", "r") as f:
+            classes = [line.strip() for line in f.readlines()]
+        self.stop_sign_class_id = classes.index("stop sign")
+
         self.final_average_point = []
         self.init_kalman()
         self.subscription = self.create_subscription(
@@ -44,48 +50,9 @@ class TelloSubscriber(Node):
         self.final_point_list_filt = []
         self.filt_size = 10
 
-        #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
-        # cv2.namedWindow('Threshold Adjustments')
-        # self.lower_bound = LOWER_BROWN
-        # self.upper_bound = UPPER_BROWN
-        # cv2.createTrackbar('Lower H', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-        # cv2.createTrackbar('Upper H', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-
-        # cv2.createTrackbar('Lower S', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-        # cv2.createTrackbar('Upper S', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-
-        # cv2.createTrackbar('Lower V', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-        # cv2.createTrackbar('Upper V', 'Threshold Adjustments',
-        #                     0, 255, self.update_threshold)
-
-        # cv2.setTrackbarPos('Upper H', 'Threshold Adjustments', 255)
-        # cv2.setTrackbarPos('Upper S', 'Threshold Adjustments', 255)
-        # cv2.setTrackbarPos('Upper V', 'Threshold Adjustments', 255)
-
         self.frame_coord_pub = self.create_publisher(Float32MultiArray, '/frame_coord', 10)
         self.get_logger().info("Image subscriber node initialized")
 
-    
-
-    def update_threshold(self, x):
-        pass
-        #UNCOMMENT FOR DEBUGGING TODO: CLEAN IT!#
-        # lower_h = cv2.getTrackbarPos('Lower H', 'Threshold Adjustments')
-        # upper_h = cv2.getTrackbarPos('Upper H', 'Threshold Adjustments')
-
-        # lower_s = cv2.getTrackbarPos('Lower S', 'Threshold Adjustments')
-        # upper_s = cv2.getTrackbarPos('Upper S', 'Threshold Adjustments')
-
-        # lower_v = cv2.getTrackbarPos('Lower V', 'Threshold Adjustments')
-        # upper_v = cv2.getTrackbarPos('Upper V', 'Threshold Adjustments')
-
-        # self.lower_bound = np.array([lower_h, lower_s, lower_v])
-        # self.upper_bound = np.array([upper_h, upper_s, upper_v])
 
     def init_kalman(self,):
         self.kf = KalmanFilter(dim_x=4, dim_z=2)
@@ -111,6 +78,39 @@ class TelloSubscriber(Node):
         cv_image = CvBridge().imgmsg_to_cv2(msg, "bgr8")
         self.process_frame(cv_image)
 
+    def get_output_layers(self):
+        layer_names = self.net.getLayerNames()
+        output_layers = [layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        return output_layers
+
+    def yolo_search_stop_sign(self, img):
+        height, width, _ = img.shape
+        blob = cv2.dnn.blobFromImage(img, 1/255.0, (416, 416), swapRB=True, crop=False)
+        self.net.setInput(blob)
+        outs = self.net.forward(self.get_output_layers())
+        for out in outs:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > 0.5 and class_id == self.stop_sign_class_id:
+                    center_x = int(detection[0] * width)
+                    center_y = int(detection[1] * height)
+                    w = int(detection[2] * width)
+                    h = int(detection[3] * height)
+
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
+
+                    self.stop_sign_conf = float(w * h)
+                    self.detected_stop = 1.0
+                    print(f'area: {self.stop_sign_conf }')
+
+                    # cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    # cv2.putText(img, "Stop Sign", (x, y - 5),
+                    #              cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
+
+
     def search_stop_sign(self, image):
 
         cloned_image = image.copy()
@@ -125,12 +125,6 @@ class TelloSubscriber(Node):
                 print(f"Detected class: {class_label}, Confidence: {confidence}")
                 self.detected_stop = 1.0
                 self.stop_sign_conf = confidence
-                # cv2.rectangle(image, (0, 0), (image.shape[1],
-                                                    #   image.shape[0]), (0, 255, 0), 2)
-
-                # label = f"{class_label}: {confidence}"
-                # cv2.putText(image, label, (10, 30),
-                            #  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 
     def process_frame(self, image):
@@ -140,7 +134,8 @@ class TelloSubscriber(Node):
         self.final_average_point = None
         image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
 
-        self.search_stop_sign(image)
+        # self.search_stop_sign(image)
+        self.yolo_search_stop_sign(image)
 
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 

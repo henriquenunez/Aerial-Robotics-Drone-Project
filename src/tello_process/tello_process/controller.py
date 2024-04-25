@@ -92,7 +92,7 @@ class TelloController(Node):
             else:
                 self.go_through = 0
         else:
-            if detected_stop == 1.0 and (not math.isnan(tgt_x)) and conf_stop > 0.5:
+            if detected_stop == 1.0 and conf_stop > 23000:
                 self.get_logger().info('Landing Tello')
                 self.tello_req.cmd = 'land'
                 takeoff_future = self.tello_client.call_async(self.tello_req)
