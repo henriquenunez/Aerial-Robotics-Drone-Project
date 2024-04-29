@@ -124,9 +124,7 @@ class TelloSubscriber(Node):
 
                     # cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     # cv2.putText(img, "Stop Sign", (x, y - 5),
-                    #              cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
-
-        
+                    #              cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)        
 
     def search_stop_sign(self, image):
 
@@ -142,7 +140,6 @@ class TelloSubscriber(Node):
                 print(f"Detected class: {class_label}, Confidence: {confidence}")
                 self.detected_stop = 1.0
                 self.stop_sign_conf = confidence
-
 
     def process_frame(self, image):
 
@@ -292,4 +289,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
