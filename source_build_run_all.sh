@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/drone_racing_ws/
+# cd ~/drone_racing_ws/
 
 source /opt/ros/galactic/setup.bash
 source install/setup.bash

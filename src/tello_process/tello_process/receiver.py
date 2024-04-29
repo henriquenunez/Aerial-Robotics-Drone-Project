@@ -1,16 +1,20 @@
+# receiver.py
+
+import time
+
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32MultiArray, Float32
+
 import cv2
 import numpy as np
 from filterpy.kalman import KalmanFilter
+
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
-
-
 
 LOWER_BROWN = np.array([74, 41, 48])
 UPPER_BROWN = np.array([128, 204, 206])
@@ -20,7 +24,6 @@ UPPER_GREEN = np.array([70, 255, 255])
 
 LOWER_RED = np.array([0, 80, 50])
 UPPER_RED = np.array([50, 255, 255])
-
 
 class TelloSubscriber(Node):
 
@@ -53,6 +56,9 @@ class TelloSubscriber(Node):
         self.frame_coord_pub = self.create_publisher(Float32MultiArray, '/frame_coord', 10)
         self.get_logger().info("Image subscriber node initialized")
 
+        self.fps_pub = self.create_publisher(Float32, '/fps', 10)
+        self.last_fps_time = time.time()
+
 
     def init_kalman(self,):
         self.kf = KalmanFilter(dim_x=4, dim_z=2)
@@ -77,6 +83,14 @@ class TelloSubscriber(Node):
         # self.get_logger().info("Received an image")
         cv_image = CvBridge().imgmsg_to_cv2(msg, "bgr8")
         self.process_frame(cv_image)
+        
+        # Compute and send the framerate
+        now = time.time()
+        fps = 1 / (now - self.last_fps_time)
+        self.last_fps_time = now
+        fps_msg = Float32()
+        fps_msg.data = fps
+        self.fps_pub.publish(fps_msg)
 
     def get_output_layers(self):
         layer_names = self.net.getLayerNames()
@@ -104,12 +118,15 @@ class TelloSubscriber(Node):
 
                     self.stop_sign_conf = float(w * h)
                     self.detected_stop = 1.0
-                    print(f'area: {self.stop_sign_conf }')
+                    print(f'area: {self.stop_sign_conf}')
+
+                    return center_x, center_y
 
                     # cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     # cv2.putText(img, "Stop Sign", (x, y - 5),
                     #              cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 1)
 
+        
 
     def search_stop_sign(self, image):
 
@@ -133,9 +150,6 @@ class TelloSubscriber(Node):
         self.stop_sign_conf = 0.0
         self.final_average_point = None
         image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
-
-        # self.search_stop_sign(image)
-        self.yolo_search_stop_sign(image)
 
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -190,37 +204,46 @@ class TelloSubscriber(Node):
             self.kf.predict()
             self.kf.update(self.final_average_point)
 
-            # self.get_logger().info(f'after kalman: {self.final_average_point}')                                
+            # self.get_logger().info(f'after kalman: {self.final_average_point}')
+            cv2.circle(image, self.final_average_point, 5, (255, 255, 0), -1)
 
-            cv2.circle(image, self.final_average_point, 5, (255, 255, 255), -1)
+        has_point = False
+
+        if self.final_average_point:
+
+            self.final_point_list_filt.append((self.final_average_point[0], self.final_average_point[1]))
+
+            if len(self.final_point_list_filt) > self.filt_size:
+                self.final_point_list_filt.pop(0)
+
+            xp = np.mean([p[0] for p in self.final_point_list_filt])
+            yp = np.mean([p[1] for p in self.final_point_list_filt])
+            has_point = True
+
+        else: # If no frame was detected, run yolo
+            yolo_point = self.yolo_search_stop_sign(image)
+            if yolo_point is not None:
+                xp, yp = yolo_point
+                has_point = True
+
+        if not has_point:
+            array = Float32MultiArray(data=[-1000,
+                                            -1000,
+                                            self.detected_stop ,
+                                            self.stop_sign_conf])
+        else:
+            cv2.circle(image, (int(xp), int(yp)), 5, (255, 255, 0), -1)
+
+            array = Float32MultiArray(data=[(xp / image.shape[1]) * 2 - 1,
+                                            (yp / image.shape[0]) * 2 - 1,
+                                            self.detected_stop,
+                                            self.stop_sign_conf])
 
         cv2.imshow("res", mask)
         cv2.imshow("Tello Image", image)
         cv2.waitKey(1)
 
-        if self.final_average_point:
- 
-            xp = np.mean([p[0] for p in self.final_point_list_filt])
-            yp = np.mean([p[1] for p in self.final_point_list_filt])
-
-            self.final_point_list_filt.append((self.final_average_point[0], self.final_average_point[1]))
-            if len(self.final_point_list_filt) > self.filt_size:
-                self.final_point_list_filt.pop(0)
-
-            array = Float32MultiArray(data=[(xp / image.shape[1]) * 2 - 1,
-                                 (yp / image.shape[0]) * 2 - 1, 
-                                 self.detected_stop,
-                                 self.stop_sign_conf])
-                                         
-            self.frame_coord_pub.publish(array)
-        else:
-            array = Float32MultiArray(data=[-1000,
-                                             -1000,
-                                       self.detected_stop ,
-                                         self.stop_sign_conf])
-                                         
-            self.frame_coord_pub.publish(array)
-
+        self.frame_coord_pub.publish(array)
 
     def get_biggest_inner_contour(self, contours, hierarchy, image):
 
@@ -257,8 +280,6 @@ class TelloSubscriber(Node):
                     cv2.circle(image, average_point, 5, (0, 0, 255), -1)
 
         return output_contour, output_coords
-    
-    
 
 def main(args=None):
     rclpy.init(args=args)
