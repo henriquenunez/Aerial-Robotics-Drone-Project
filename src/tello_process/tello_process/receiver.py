@@ -202,7 +202,7 @@ class TelloSubscriber(Node):
             self.kf.update(self.final_average_point)
 
             # self.get_logger().info(f'after kalman: {self.final_average_point}')
-            cv2.circle(image, self.final_average_point, 5, (255, 255, 0), -1)
+            cv2.circle(image, self.final_average_point, 5, (255, 127, 127), -1)
 
         has_point = False
 
@@ -216,6 +216,8 @@ class TelloSubscriber(Node):
             xp = np.mean([p[0] for p in self.final_point_list_filt])
             yp = np.mean([p[1] for p in self.final_point_list_filt])
             has_point = True
+
+            self.stop_sign_conf = cv2.contourArea(largest_contour)
 
         else: # If no frame was detected, run yolo
             yolo_point = self.yolo_search_stop_sign(image)
