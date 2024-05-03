@@ -278,10 +278,10 @@
       <pose>0.436387 8.05231 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>1522 865000000</sim_time>
-      <real_time>254 582194353</real_time>
-      <wall_time>1714510314 796140023</wall_time>
-      <iterations>178012</iterations>
+      <sim_time>2763 834000000</sim_time>
+      <real_time>29 503754617</real_time>
+      <wall_time>1714771148 845501797</wall_time>
+      <iterations>20263</iterations>
       <model name='Stop Sign'>
         <pose>-0.000501 8.94185 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -303,43 +303,43 @@
         </link>
       </model>
       <model name='circle_gate_green_short'>
-        <pose>0.28156 -5.33141 0.05 0 -0 0</pose>
+        <pose>0.28156 -5.64328 0.05 -0 -0 -0</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>0.28156 -5.33141 0.05 0 -0 0</pose>
-          <velocity>-0 0 0 0 -0 0</velocity>
-          <acceleration>0 -0 0 0 -0 0</acceleration>
-          <wrench>0 -0 0 0 -0 0</wrench>
+          <pose>0.28156 -5.64328 0.05 -0 -0 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 -0 -4.11524 1.9852 -0.048571 3.14159</acceleration>
+          <wrench>0 -0 -4.11524 0 -0 0</wrench>
         </link>
       </model>
       <model name='circle_gate_red_clone'>
-        <pose>-2.19261 1.51653 0.05 0 0 -0.295431</pose>
+        <pose>-2.81442 1.79234 0.05 0 -0 0.076687</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>-2.19261 1.51653 0.05 0 0 -0.295431</pose>
-          <velocity>0 -0 -0 0 -0 0</velocity>
-          <acceleration>0 -0 -0 1e-06 -0 0</acceleration>
+          <pose>-2.81442 1.79234 0.05 0 -0 0.076687</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 -0 -0 0 1e-06 0</acceleration>
           <wrench>0 -0 -0 0 -0 0</wrench>
         </link>
       </model>
       <model name='euro_pallet'>
-        <pose>-0.398733 8.07963 0.121995 -8e-06 0 -0.016806</pose>
+        <pose>-0.398744 8.0796 0.121988 2e-05 -0 -0.016762</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-0.398733 8.07963 0.121995 -8e-06 0 -0.016806</pose>
-          <velocity>1.5e-05 0.000604 -0.004857 -0.008394 0.00021 -0</velocity>
-          <acceleration>0 0 -9.8 0 -0 0</acceleration>
-          <wrench>0 0 -196 0 -0 0</wrench>
+          <pose>-0.398744 8.0796 0.121988 2e-05 -0 -0.016762</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-0.066366 -2.62891 -1.99265 -1.18597 -0.217139 0.003136</acceleration>
+          <wrench>-1.32732 -52.5783 -39.853 0 -0 0</wrench>
         </link>
       </model>
       <model name='euro_pallet_0'>
-        <pose>0.410257 8.04541 0.121995 -8e-06 -0 -0.016813</pose>
+        <pose>0.410282 8.04541 0.121988 2e-05 0 -0.016779</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>0.410257 8.04541 0.121995 -8e-06 -0 -0.016813</pose>
-          <velocity>1.5e-05 0.000604 -0.004857 -0.008394 0.00021 -0</velocity>
-          <acceleration>0 0 -9.8 0 -0 0</acceleration>
-          <wrench>0 0 -196 0 -0 0</wrench>
+          <pose>0.410282 8.04541 0.121988 2e-05 0 -0.016779</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-0.06641 -2.62891 -1.99265 -1.18598 -0.217008 0.003136</acceleration>
+          <wrench>-1.3282 -52.5783 -39.853 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -353,23 +353,23 @@
         </link>
       </model>
       <model name='square_gate_blue'>
-        <pose>-2.00932 -2.10396 0.049997 6e-06 -9e-06 0.601025</pose>
+        <pose>-1.8193 -2.3811 0.049998 -1.2e-05 6e-06 0.601025</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>-2.00932 -2.10396 0.049997 6e-06 -9e-06 0.601025</pose>
-          <velocity>-0 -0 -0.003201 0.010438 -0.004219 0</velocity>
-          <acceleration>-0 -0 -3.2014 1.01301 1.07746 3.14159</acceleration>
-          <wrench>-0 -0 -3.2014 0 -0 0</wrench>
+          <pose>-1.8193 -2.3811 0.049998 -1.2e-05 6e-06 0.601025</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-1e-06 -8e-06 -3.41859 -1.22217 0.575508 -3.14156</acceleration>
+          <wrench>-1e-06 -8e-06 -3.41859 0 -0 0</wrench>
         </link>
       </model>
       <model name='square_gate_green'>
-        <pose>-0.590278 4.84061 0.05 0 -0 0</pose>
+        <pose>-0.229892 6.62123 0.05 0 0 -0.380106</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
-          <pose>-0.590278 4.84061 0.05 0 -0 0</pose>
-          <velocity>-0 -0 -0 0 -0 0</velocity>
-          <acceleration>-0 -0 -0 2e-06 -1e-06 -0</acceleration>
-          <wrench>-0 -0 -0 0 -0 0</wrench>
+          <pose>-0.229892 6.62123 0.05 0 0 -0.380106</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-0 0 -0 1e-06 -1e-06 0</acceleration>
+          <wrench>-0 0 -0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
@@ -378,7 +378,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>11.5882 -0.13709 14.6298 0 0.849797 -3.12623</pose>
+        <pose>-7.37044 -11.1685 16.2435 0 0.861796 0.86581</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -721,7 +721,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://square_gate_green_tall/square_gate_tall.dae</uri>
+              <uri>model://square_gate_green_short/square_gate_short.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -748,7 +748,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://square_gate_green_tall/square_gate_tall.dae</uri>
+              <uri>model://square_gate_green_short/square_gate_short.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -801,7 +801,7 @@
       </link>
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
-      <pose>-0.590278 4.84061 0 0 -0 0</pose>
+      <pose>-2.47555 5.19122 0 0 -0 0</pose>
     </model>
   </world>
 </sdf>

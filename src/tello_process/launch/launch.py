@@ -33,7 +33,7 @@ def generate_launch_description():
          ], output='screen'),
 
         # Spawn tello.urdf
-        Node(package='tello_gazebo', executable='inject_entity.py', output='screen', arguments=[urdf_path, '0', '-6', '1', '1.57079632679']),
+        Node(package='tello_gazebo', executable='inject_entity.py', output='screen', arguments=[urdf_path, '0', '-7', '1', '1.57079632679']),
 
         # Publish static transforms
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen', arguments=[urdf_path]),

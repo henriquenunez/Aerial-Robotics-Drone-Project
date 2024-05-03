@@ -79,7 +79,7 @@ class TelloController(Node):
     def frame_coord_cb(self, data):
         self.get_logger().info(f'Frame data: {data.data}, FPS: {self.fps}')
 
-        self.speed = 0.10 * ((self.fps + 2) / (15 + 2)) # 15 FPS was the base of our tests
+        self.speed = 0.12 * ((self.fps + 1) / (15 + 1)) # 15 FPS was the base of our tests
 
         tgt_x, tgt_y, detected_stop, conf_stop = data.data
 
@@ -92,6 +92,10 @@ class TelloController(Node):
         
         if self.stop_sign and conf_stop > 70000:
             self.stop_sign_close = True
+            twist_msg = self.control()
+        
+            if twist_msg is not None:
+                self.tello_vel_pub.publish(twist_msg)
         else:
             self.stop_sign_close = False
 
@@ -99,15 +103,15 @@ class TelloController(Node):
 
             self.target = (tgt_x, tgt_y)
 
-            self.mean_tgt[0] = (self.mean_tgt[0] * 14 + tgt_x) / 15
-            self.mean_tgt[1] = (self.mean_tgt[1] * 14 + tgt_y) / 15
+            self.mean_tgt[0] = (self.mean_tgt[0] * 8 + tgt_x) / 9
+            self.mean_tgt[1] = (self.mean_tgt[1] * 8 + tgt_y) / 9
 
             # Test point convergence here
-            if abs(tgt_x - self.mean_tgt[0]) > 0.15 or abs(tgt_y - self.mean_tgt[1]) > 0.15:
+            if abs(tgt_x - self.mean_tgt[0]) > 0.10 or abs(tgt_y - self.mean_tgt[1]) > 0.10:
                 self.get_logger().info(f'No convergence yet')
                 
                 twist_msg = Twist()
-                twist_msg.linear.x = self.speed * 0.8 * self.convergence_timeout / 10
+                twist_msg.linear.x = self.speed * 0.5 * self.convergence_timeout / 10
                 
                 if self.convergence_timeout >= 0:
                     self.convergence_timeout -= 1
@@ -153,16 +157,16 @@ class TelloController(Node):
 
             if self.search_state == 'START_SEARCH':
                 self.search_state = 'SEARCH_LEFT'
-                self.base_search_timeout = 10
+                self.base_search_timeout = 15
                 self.search_timeout = self.base_search_timeout
 
             if self.search_state == 'SEARCH_LEFT':
-                twist_msg.angular.z = self.speed * 2
+                twist_msg.angular.z = self.speed * 2.5
                 self.search_timeout -= 1
 
                 if self.search_timeout <= 0:
                     self.search_state = 'SEARCH_RIGHT'
-                    self.base_search_timeout *= 2
+                    self.base_search_timeout *= 2.5
                     self.search_timeout = self.base_search_timeout
 
                 self.get_logger().info(f'Searching left')
@@ -194,8 +198,8 @@ class TelloController(Node):
             okX = okY = False
 
             # Proportional controller
-            speed_z = 0.02 + self.speed * abs(tgt_y)
-            speed_ang = 0.02 + self.speed * abs(tgt_x)
+            speed_z = 0.03 + self.speed * abs(tgt_y)
+            speed_ang = 0.03 + self.speed * abs(tgt_x)
 
             # Increase and decrease height
             if tgt_y > self.poi_thresh:
@@ -231,6 +235,8 @@ class TelloController(Node):
                 twist_msg.linear.x = self.speed
                 self.centralized_frame = True
                 self.centralized_frame_timeout = 10
+            else:
+                self.centralized_frame = False
         
         return twist_msg
 
